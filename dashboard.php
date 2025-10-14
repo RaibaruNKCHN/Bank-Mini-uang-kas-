@@ -30,29 +30,46 @@ $transactions = $hist->fetchAll();
 </head>
 <body>
 <div class="box">
+
     <h2>Halo, <?=htmlspecialchars($username)?> — Dashboard</h2>
     <p><strong>Saldo saat ini:</strong> Rp <?=number_format($balance,2,',','.')?></p>
 
-    <h3>Tambah Transaksi</h3>
-    <form action="transaksi.php" method="post">
-        <input type="hidden" name="csrf" value="<?=htmlspecialchars(csrf_token())?>">
-        <label>Jenis
-            <select name="type">
-                <option value="deposit">Deposit (Masuk)</option>
-                <option value="withdraw">Withdraw (Keluar)</option>
-            </select>
-        </label><br>
-        <label>Jumlah (contoh: 15000.50)<br><input name="amount" required></label><br>
-        <label>Catatan (opsional)<br><input name="note"></label><br>
-        <button type="submit">Simpan</button>
-    </form>
+
+    <?php if (is_admin()): ?>
+        <h3>Tambah Transaksi</h3>
+        <form action="transaksi.php" method="post">
+            <input type="hidden" name="csrf" value="<?=htmlspecialchars(csrf_token())?>">
+            <label>Jenis
+                <select name="type">
+                    <option value="deposit">Deposit (Masuk)</option>
+                    <option value="withdraw">Withdraw (Keluar)</option>
+                </select>
+            </label><br>
+            <label>Jumlah (contoh: 15000.50)<br><input name="amount" required></label><br>
+            <label>Catatan (opsional)<br><input name="note"></label><br>
+            <button type="submit">Simpan</button>
+        </form>
+    <?php elseif (is_guru()): ?>
+        <h3>Tambah Deposit</h3>
+        <form action="transaksi.php" method="post">
+            <input type="hidden" name="csrf" value="<?=htmlspecialchars(csrf_token())?>">
+            <input type="hidden" name="type" value="deposit">
+            <label>Jumlah (contoh: 15000.50)<br><input name="amount" required></label><br>
+            <label>Catatan (opsional)<br><input name="note"></label><br>
+            <button type="submit">Simpan Deposit</button>
+        </form>
+    <?php endif; ?>
+
+
 
     <h3>Histori Transaksi</h3>
     <?php if(empty($transactions)): ?>
         <p>Tidak ada transaksi.</p>
     <?php else: ?>
     <table class="tbl">
-        <thead><tr><th>#</th><th>Tanggal</th><th>Jenis</th><th>Jumlah</th><th>Catatan</th></tr></thead>
+        <thead><tr><th>#</th><th>Tanggal</th><th>Jenis</th><th>Jumlah</th><th>Catatan</th>
+        <?php if(is_admin()): ?><th>Aksi</th><?php endif; ?>
+        </tr></thead>
         <tbody>
         <?php foreach($transactions as $t): ?>
             <tr>
@@ -61,6 +78,9 @@ $transactions = $hist->fetchAll();
                 <td><?=htmlspecialchars($t['type'])?></td>
                 <td style="text-align:right"><?=number_format($t['amount'],2,',','.')?></td>
                 <td><?=htmlspecialchars($t['note'])?></td>
+                <?php if(is_admin()): ?>
+                <td><a href="hapus_histori.php?id=<?=htmlspecialchars($t['id'])?>" onclick="return confirm('Yakin hapus histori?')">Hapus</a></td>
+                <?php endif; ?>
             </tr>
         <?php endforeach; ?>
         </tbody>

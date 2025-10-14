@@ -14,10 +14,20 @@ if (!verify_csrf($_POST['csrf'] ?? '')) {
     die('CSRF token invalid.');
 }
 
+
 $type = $_POST['type'] ?? '';
 $amount = $_POST['amount'] ?? '';
 $note = $_POST['note'] ?? '';
 $userid = $_SESSION['userid'];
+
+// Batasi transaksi sesuai role
+if (is_user()) {
+    die('User tidak boleh melakukan transaksi.');
+}
+if (is_guru() && $type !== 'deposit') {
+    die('Guru hanya boleh melakukan deposit.');
+}
+// Admin boleh deposit dan withdraw
 
 // validasi
 $allowed = ['deposit','withdraw'];

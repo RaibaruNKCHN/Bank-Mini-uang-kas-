@@ -34,3 +34,81 @@ function csrf_token() {
 function verify_csrf($token) {
     return hash_equals($_SESSION['csrf_token'] ?? '', $token ?? '');
 }
+
+// login
+function login($username, $password) {
+    global $pdo;
+    $stmt = $pdo->prepare("SELECT id, password, role FROM user WHERE username = ? LIMIT 1");
+    $stmt->execute([$username]);
+    $user = $stmt->fetch();
+    if ($user && password_verify($password, $user['password'])) {
+        $_SESSION['userid'] = $user['id'];
+        $_SESSION['role'] = $user['role'];
+        return true;
+    }
+    return false;
+}
+
+// logout
+function logout() {
+    session_destroy();
+}
+
+// check admin
+function is_admin() {
+    return isset($_SESSION['role']) && $_SESSION['role'] === 'admin';
+}
+
+// check user
+function is_user() {
+    return isset($_SESSION['role']) && $_SESSION['role'] === 'user';
+}
+
+// check login
+function check_login() {
+    if (!is_logged_in()) {
+        header("Location: login.php");
+        exit;
+    }
+}
+
+// check admin login
+function check_admin_login() {
+    if (!is_logged_in() || !is_admin()) {
+        header("Location: login.php");
+        exit;
+    }
+}
+
+// check user login
+function check_user_login() {
+    if (!is_logged_in() || !is_user()) {
+        header("Location: login.php");
+        exit;
+    }
+}
+
+// check admin or user
+function check_admin_or_user() {
+    if (!is_logged_in()) {
+        header("Location: login.php");
+        exit;
+    }
+    if ($_SESSION['role'] !== 'admin') {
+        // redirect atau tampilkan pesan akses ditolak
+    }
+}
+
+// check guru
+function is_guru() {
+    return isset($_SESSION['role']) && $_SESSION['role'] === 'guru';
+}
+
+// check guru login
+function check_guru_login() {
+    if (!is_logged_in() || !is_guru()) {
+        header("Location: login.php");
+        exit;
+    }
+}
+?>
