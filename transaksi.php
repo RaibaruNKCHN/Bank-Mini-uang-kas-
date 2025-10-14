@@ -18,7 +18,7 @@ if (!verify_csrf($_POST['csrf'] ?? '')) {
 $type = $_POST['type'] ?? '';
 $amount = $_POST['amount'] ?? '';
 $note = $_POST['note'] ?? '';
-$userid = $_SESSION['userid'];
+$userid = $_POST['userid'] ?? $_SESSION['userid']; // Allow admin to specify userid
 
 // Batasi transaksi sesuai role
 if (is_user()) {

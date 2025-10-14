@@ -25,30 +25,48 @@ $transactions = $hist->fetchAll();
 <html>
 <head>
 <meta charset="utf-8">
-<title>Dashboard — Mini Bank</title>
+<title>Mini Bank - Dashboard</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="box">
+<div class="dashboard-container">
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-left">
+            <div class="navbar-brand">🏦 Mini Bank</div>
+            <?php if (!is_admin()): ?>
+            <a href="#dashboard" class="navbar-link">Dashboard</a>
+            <?php endif; ?>
+            <?php if (is_admin()): ?>
+            <a href="#userguru" class="navbar-link">User & Guru</a>
+            <a href="#adminhistori" class="navbar-link">Histori User/Guru</a>
+            <a href="#adminwithdraw" class="navbar-link">Withdraw User/Guru</a>
+            <?php elseif (is_guru()): ?>
+            <a href="#deposit" class="navbar-link">Deposit</a>
+            <?php endif; ?>
+            <a href="#histori" class="navbar-link">Histori</a>
+        </div>
+        <div class="navbar-right">
+            <span class="user-info">👤 <?=$username?></span>
+            <a href="logout.php" class="logout-btn">Logout</a>
+        </div>
+    </nav>
 
-
-
-
-    <h2>Halo, <?=htmlspecialchars($username)?> — Dashboard</h2>
-    <div style="margin-bottom:10px;">
-        <strong>Role:</strong> <span style="color:#007bff;font-weight:bold; font-size:1.1em; padding:2px 8px; border-radius:4px; background:#f0f8ff;"><?=htmlspecialchars($_SESSION['role'] ?? '-')?></span>
-    </div>
-    <p><strong>Saldo saat ini:</strong> Rp <?=number_format($balance,2,',','.')?></p>
-
+    <!-- Dashboard Section -->
+    <?php if (!is_admin()): ?>
+    <section class="saldo-card" id="section-dashboard">
+        <div class="saldo-label">Saldo saat ini</div>
+        <div class="saldo-value">💰 Rp <?=number_format($balance,2,',','.')?></div>
+    </section>
+    <?php endif; ?>
 
     <?php if (is_admin()): ?>
-        <!-- Admin: semua fitur -->
-        <!-- Admin: semua fitur -->
-        <h3>Kelola User & Guru</h3>
+    <section class="admin-section" id="section-userguru" style="display:none;">
+        <h3 class="section-title">Kelola User & Guru</h3>
         <?php
         $users = $pdo->query("SELECT id, username, role FROM user WHERE role IN ('user','guru') ORDER BY role, username")->fetchAll();
         if ($users): ?>
-        <table class="tbl" style="margin-bottom:20px;">
+        <table class="user-table">
             <thead><tr><th>ID</th><th>Username</th><th>Role</th><th>Aksi</th></tr></thead>
             <tbody>
             <?php foreach($users as $u): ?>
@@ -64,49 +82,101 @@ $transactions = $hist->fetchAll();
         <?php else: ?>
         <p>Tidak ada user/guru.</p>
         <?php endif; ?>
-        <h3>Tambah Transaksi</h3>
-        <form action="transaksi.php" method="post" style="margin-bottom:20px;">
-            <input type="hidden" name="csrf" value="<?=htmlspecialchars(csrf_token())?>">
-            <label>Jenis
-                <select name="type">
-                    <option value="deposit">Deposit (Masuk)</option>
-                    <option value="withdraw">Withdraw (Keluar)</option>
+    </section>
+
+    <section class="admin-section" id="section-adminhistori" style="display:none;">
+        <h3 class="section-title">Histori Transaksi User/Guru</h3>
+        <form method="get" class="form-card">
+            <label>Pilih User/Guru
+                <select name="userid" required>
+                    <option value="">-- Pilih --</option>
+                    <?php
+                    $allusers = $pdo->query("SELECT id, username, role FROM user WHERE role IN ('user','guru') ORDER BY role, username")->fetchAll();
+                    foreach($allusers as $u): ?>
+                    <option value="<?=htmlspecialchars($u['id'])?>"><?=htmlspecialchars($u['role'])?> - <?=htmlspecialchars($u['username'])?></option>
+                    <?php endforeach; ?>
                 </select>
             </label><br>
-            <label>Jumlah (contoh: 15000.50)<br><input name="amount" required></label><br>
-            <label>Catatan (opsional)<br><input name="note"></label><br>
-            <button type="submit">Simpan</button>
+            <button type="submit">Lihat Histori</button>
         </form>
-
+        <?php if(isset($_GET['userid']) && is_numeric($_GET['userid'])): ?>
+        <?php
+        $selected_userid = (int)$_GET['userid'];
+        $user_info_stmt = $pdo->prepare("SELECT username, role FROM user WHERE id = ?");
+        $user_info_stmt->execute([$selected_userid]);
+        $user_info = $user_info_stmt->fetch();
+        $hist_admin = $pdo->prepare("SELECT * FROM transaksi WHERE userid = ? ORDER BY createdat DESC LIMIT 100");
+        $hist_admin->execute([$selected_userid]);
+        $admin_transactions = $hist_admin->fetchAll();
+        ?>
+        <h4>Histori untuk: <?=htmlspecialchars($user_info['role'])?> - <?=htmlspecialchars($user_info['username'])?></h4>
+        <?php if(empty($admin_transactions)): ?>
+            <p>Tidak ada transaksi.</p>
+        <?php else: ?>
+        <table class="histori-table">
+            <thead><tr><th>#</th><th>Tanggal</th><th>Jenis</th><th>Jumlah</th><th>Catatan</th><th>Aksi</th></tr></thead>
+            <tbody>
+            <?php foreach($admin_transactions as $t): ?>
+                <tr>
+                    <td><?=htmlspecialchars($t['id'])?></td>
+                    <td><?=htmlspecialchars($t['createdat'])?></td>
+                    <td><?=htmlspecialchars($t['type'])?></td>
+                    <td style="text-align:right"><?=number_format($t['amount'],2,',','.')?></td>
+                    <td><?=htmlspecialchars($t['note'])?></td>
+                    <td><a href="hapus_histori.php?id=<?=htmlspecialchars($t['id'])?>" onclick="return confirm('Yakin hapus histori ini?')">Hapus</a></td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+        <?php endif; ?>
+        <?php endif; ?>
+    </section>
+    <section class="admin-section" id="section-adminwithdraw" style="display:none;">
+        <h3 class="section-title">Withdraw untuk User/Guru</h3>
+        <form action="transaksi.php" method="post" class="form-card">
+            <input type="hidden" name="csrf" value="<?=htmlspecialchars(csrf_token())?>">
+            <input type="hidden" name="type" value="withdraw">
+            <label>Pilih User/Guru
+                <select name="userid" required>
+                    <option value="">-- Pilih --</option>
+                    <?php foreach($allusers as $u): ?>
+                    <option value="<?=htmlspecialchars($u['id'])?>"><?=htmlspecialchars($u['role'])?> - <?=htmlspecialchars($u['username'])?></option>
+                    <?php endforeach; ?>
+                </select>
+            </label><br>
+            <label>Jumlah (contoh: 15000)<br><input name="amount" required></label><br>
+            <label>Catatan (opsional)<br><input name="note"></label><br>
+            <button type="submit">Lakukan Withdraw</button>
+        </form>
+    </section>
     <?php elseif (is_guru()): ?>
-        <!-- Guru: hanya deposit, lihat saldo & histori -->
-        <!-- Guru: hanya deposit, lihat saldo & histori -->
-        <div class="info-guru" style="background:#e7f3fe;padding:10px;border-radius:5px;margin-bottom:10px;">
+    <section class="guru-section" id="section-deposit" style="display:none;">
+        <div class="info-guru">
+            <strong>Info Guru:</strong> Anda hanya dapat melakukan <b>deposit</b>, melihat saldo, dan melihat histori transaksi Anda.<br>
+            Fitur withdraw, hapus histori, dan kelola user/guru hanya tersedia untuk admin.
         </div>
-        <h3>Tambah Deposit</h3>
-        <form action="transaksi.php" method="post" style="margin-bottom:20px;">
+        <h3 class="section-title">Tambah Deposit</h3>
+        <form action="transaksi.php" method="post" class="form-card">
             <input type="hidden" name="csrf" value="<?=htmlspecialchars(csrf_token())?>">
             <input type="hidden" name="type" value="deposit">
-            <label>Jumlah (contoh: 15000.50)<br><input name="amount" required></label><br>
+            <label>Jumlah (contoh: 15000.50)<br><input name="amount" type="number" step="0.01" required></label><br>
             <label>Catatan (opsional)<br><input name="note"></label><br>
             <button type="submit">Simpan Deposit</button>
         </form>
-
+    </section>
     <?php elseif (is_user()): ?>
-        <!-- User: hanya lihat saldo & histori -->
-        <!-- User: hanya lihat saldo & histori -->
-        <div class="info-user" style="background:#f9f9f9;padding:10px;border-radius:5px;margin-bottom:10px;">
+    <section class="user-section" id="section-dashboard">
+        <div class="info-user">
         </div>
+    </section>
     <?php endif; ?>
 
-
-
-
-    <h3>Histori Transaksi</h3>
+    <section class="histori-section" id="section-histori" style="display:none;">
+    <h3 class="section-title">Histori Transaksi</h3>
     <?php if(empty($transactions)): ?>
         <p>Tidak ada transaksi.</p>
     <?php else: ?>
-    <table class="tbl">
+    <table class="histori-table">
         <thead><tr><th>#</th><th>Tanggal</th><th>Jenis</th><th>Jumlah</th><th>Catatan</th>
         <?php if(is_admin()): ?><th>Aksi</th><?php endif; ?>
         </tr></thead>
@@ -126,8 +196,34 @@ $transactions = $hist->fetchAll();
         </tbody>
     </table>
     <?php endif; ?>
+    </section>
 
-    <p><a href="logout.php">Logout</a></p>
+    <script>
+    // Navbar navigation
+    document.querySelectorAll('.navbar-link').forEach(function(link) {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            var target = link.getAttribute('href').replace('#','section-');
+            document.querySelectorAll('section').forEach(function(sec){
+                sec.style.display = 'none';
+            });
+            var showSec = document.getElementById(target);
+            if(showSec) showSec.style.display = '';
+        });
+    });
+    // Show dashboard by default, or adminhistori if userid is set, or userguru for admin
+    document.querySelectorAll('section').forEach(function(sec){
+        sec.style.display = 'none';
+    });
+    <?php if(isset($_GET['userid']) && is_admin()): ?>
+    var defaultSec = document.getElementById('section-adminhistori');
+    <?php elseif(is_admin()): ?>
+    var defaultSec = document.getElementById('section-userguru');
+    <?php else: ?>
+    var defaultSec = document.getElementById('section-dashboard');
+    <?php endif; ?>
+    if(defaultSec) defaultSec.style.display = '';
+    </script>
 </div>
 </body>
 </html>

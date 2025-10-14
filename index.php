@@ -38,16 +38,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="box">
-    <h2>Login — Mini Bank</h2>
-    <?php if($err): ?><div class="error"><?=htmlspecialchars($err)?></div><?php endif; ?>
-    <form method="post">
-        <input type="hidden" name="csrf" value="<?=htmlspecialchars(csrf_token())?>">
-        <label>Username<br><input name="username" required></label><br>
-        <label>Password<br><input type="password" name="password" required></label><br>
-        <button type="submit">Login</button>
-    </form>
-    <p>Untuk demo: <strong>user</strong> / <strong>password</strong></p>
+<div class="login-container">
+    <div class="login-card fade-in">
+        <div class="login-icon">🏦</div>
+        <h2 class="login-title">Selamat Datang di Mini Bank</h2>
+        <p class="login-subtitle">Masuk untuk mengelola keuangan Anda</p>
+        <?php if($err): ?><div class="login-error shake"><?=htmlspecialchars($err)?></div><?php endif; ?>
+        <form method="post" class="login-form">
+            <input type="hidden" name="csrf" value="<?=htmlspecialchars(csrf_token())?>">
+            <label class="login-label">Username<br><input name="username" class="login-input" placeholder="Masukkan username" required></label><br>
+            <label class="login-label">Password<br><input type="password" name="password" class="login-input" placeholder="Masukkan password" required></label><br>
+            <button type="submit" class="login-btn">Masuk</button>
+        </form>
+        <div class="login-footer">
+            <p>Bank Mini - Aman & Terpercaya</p>
+        </div>
+    </div>
 </div>
 </body>
 </html>
