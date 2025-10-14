@@ -13,14 +13,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $username = $_POST['username'] ?? '';
         $password = $_POST['password'] ?? '';
 
-        $stmt = $pdo->prepare("SELECT id, password FROM user WHERE username = ? LIMIT 1");
+        $stmt = $pdo->prepare("SELECT id, password, role FROM user WHERE username = ? LIMIT 1");
         $stmt->execute([$username]);
         $user = $stmt->fetch();
-    if ($user && $password === $user['password']) {
+        if ($user && $password === $user['password']) {
             // login successful
             session_regenerate_id(true);
             $_SESSION['userid'] = $user['id'];
             $_SESSION['username'] = $username;
+            $_SESSION['role'] = $user['role'];
             header('Location: dashboard.php');
             exit;
         } else {

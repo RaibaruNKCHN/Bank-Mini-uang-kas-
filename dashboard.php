@@ -31,13 +31,41 @@ $transactions = $hist->fetchAll();
 <body>
 <div class="box">
 
+
+
+
     <h2>Halo, <?=htmlspecialchars($username)?> — Dashboard</h2>
+    <div style="margin-bottom:10px;">
+        <strong>Role:</strong> <span style="color:#007bff;font-weight:bold; font-size:1.1em; padding:2px 8px; border-radius:4px; background:#f0f8ff;"><?=htmlspecialchars($_SESSION['role'] ?? '-')?></span>
+    </div>
     <p><strong>Saldo saat ini:</strong> Rp <?=number_format($balance,2,',','.')?></p>
 
 
     <?php if (is_admin()): ?>
+        <!-- Admin: semua fitur -->
+        <!-- Admin: semua fitur -->
+        <h3>Kelola User & Guru</h3>
+        <?php
+        $users = $pdo->query("SELECT id, username, role FROM user WHERE role IN ('user','guru') ORDER BY role, username")->fetchAll();
+        if ($users): ?>
+        <table class="tbl" style="margin-bottom:20px;">
+            <thead><tr><th>ID</th><th>Username</th><th>Role</th><th>Aksi</th></tr></thead>
+            <tbody>
+            <?php foreach($users as $u): ?>
+                <tr>
+                    <td><?=htmlspecialchars($u['id'])?></td>
+                    <td><?=htmlspecialchars($u['username'])?></td>
+                    <td><?=htmlspecialchars($u['role'])?></td>
+                    <td><a href="hapus_user.php?id=<?=htmlspecialchars($u['id'])?>" onclick="return confirm('Yakin hapus user/guru ini?')">Hapus</a></td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+        <?php else: ?>
+        <p>Tidak ada user/guru.</p>
+        <?php endif; ?>
         <h3>Tambah Transaksi</h3>
-        <form action="transaksi.php" method="post">
+        <form action="transaksi.php" method="post" style="margin-bottom:20px;">
             <input type="hidden" name="csrf" value="<?=htmlspecialchars(csrf_token())?>">
             <label>Jenis
                 <select name="type">
@@ -49,16 +77,28 @@ $transactions = $hist->fetchAll();
             <label>Catatan (opsional)<br><input name="note"></label><br>
             <button type="submit">Simpan</button>
         </form>
+
     <?php elseif (is_guru()): ?>
+        <!-- Guru: hanya deposit, lihat saldo & histori -->
+        <!-- Guru: hanya deposit, lihat saldo & histori -->
+        <div class="info-guru" style="background:#e7f3fe;padding:10px;border-radius:5px;margin-bottom:10px;">
+        </div>
         <h3>Tambah Deposit</h3>
-        <form action="transaksi.php" method="post">
+        <form action="transaksi.php" method="post" style="margin-bottom:20px;">
             <input type="hidden" name="csrf" value="<?=htmlspecialchars(csrf_token())?>">
             <input type="hidden" name="type" value="deposit">
             <label>Jumlah (contoh: 15000.50)<br><input name="amount" required></label><br>
             <label>Catatan (opsional)<br><input name="note"></label><br>
             <button type="submit">Simpan Deposit</button>
         </form>
+
+    <?php elseif (is_user()): ?>
+        <!-- User: hanya lihat saldo & histori -->
+        <!-- User: hanya lihat saldo & histori -->
+        <div class="info-user" style="background:#f9f9f9;padding:10px;border-radius:5px;margin-bottom:10px;">
+        </div>
     <?php endif; ?>
+
 
 
 
