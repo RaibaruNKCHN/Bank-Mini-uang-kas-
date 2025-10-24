@@ -31,7 +31,7 @@ try {
     $stmt = $pdo->prepare("SELECT id FROM user WHERE username = ?");
     $stmt->execute([$username]);
     if (!$stmt->fetch()) {
-        $insert = $pdo->prepare("INSERT INTO user (username, password) VALUES (?, ?)");
+        $insert = $pdo->prepare("INSERT INTO user (username, password, role) VALUES (?, ?, 'user')");
         $insert->execute([$username, $hash]);
         echo "Tabel dibuat dan user seed ditambahkan. Username: user, Password: password<br>";
     } else {

@@ -16,12 +16,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt = $pdo->prepare("SELECT id, password, role FROM user WHERE username = ? LIMIT 1");
         $stmt->execute([$username]);
         $user = $stmt->fetch();
-        if ($user && $password === $user['password']) {
+        if ($user && ($password === $user['password'] || password_verify($password, $user['password']))) {
             // login successful
             session_regenerate_id(true);
             $_SESSION['userid'] = $user['id'];
             $_SESSION['username'] = $username;
-            $_SESSION['role'] = $user['role'];
+            $_SESSION['role'] = $user['role'] ?? 'user';
             header('Location: dashboard.php');
             exit;
         } else {
@@ -51,6 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <button type="submit" class="login-btn">Masuk</button>
         </form>
         <div class="login-footer">
+            <p>Belum punya akun? <a href="register.php">Daftar</a></p>
             <p>Bank Mini - Aman & Terpercaya</p>
         </div>
     </div>

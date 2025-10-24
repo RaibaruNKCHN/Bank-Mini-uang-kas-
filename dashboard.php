@@ -4,6 +4,19 @@ if (!is_logged_in()) {
     header('Location: index.php');
     exit;
 }
+
+// Handle success notification
+$success_message = '';
+if (isset($_GET['success']) && isset($_GET['balance']) && isset($_GET['username'])) {
+    $type = $_GET['success'];
+    $balance = $_GET['balance'];
+    $username = $_GET['username'];
+    if ($type === 'deposit') {
+        $success_message = "Deposit untuk $username berhasil! Saldo saat ini: Rp $balance";
+    } elseif ($type === 'withdraw') {
+        $success_message = "Withdraw untuk $username berhasil! Saldo saat ini: Rp $balance";
+    }
+}
 $userid = $_SESSION['userid'];
 $username = $_SESSION['username'] ?? '';
 
@@ -39,8 +52,9 @@ $transactions = $hist->fetchAll();
             <?php endif; ?>
             <?php if (is_admin()): ?>
             <a href="#userguru" class="navbar-link">User & Guru</a>
-            <a href="#adminhistori" class="navbar-link">Histori User/Guru</a>
+            <a href="#admindeposit" class="navbar-link">Deposit User/Guru</a>
             <a href="#adminwithdraw" class="navbar-link">Withdraw User/Guru</a>
+            <a href="#adminhistori" class="navbar-link">Histori User/Guru</a>
             <?php elseif (is_guru()): ?>
             <a href="#deposit" class="navbar-link">Deposit</a>
             <?php endif; ?>
@@ -49,8 +63,18 @@ $transactions = $hist->fetchAll();
         <div class="navbar-right">
             <span class="user-info">👤 <?=$username?></span>
             <a href="logout.php" class="logout-btn">Logout</a>
+            <?php if (!is_admin()): ?>
+            <a href="hapus_user.php?id=<?=htmlspecialchars($userid)?>" onclick="return confirm('Yakin hapus akun Anda sendiri?')" style="color: red; font-size: 12px;">Hapus Akun</a>
+            <?php endif; ?>
         </div>
     </nav>
+
+    <!-- Success Notification -->
+    <?php if (!empty($success_message)): ?>
+    <div class="success-notification" style="background:#d4edda; color:#155724; padding:10px; margin-bottom:20px; border:1px solid #c3e6cb; border-radius:6px; font-weight:bold;">
+        ✅ <?=$success_message?>
+    </div>
+    <?php endif; ?>
 
     <!-- Dashboard Section -->
     <?php if (!is_admin()): ?>
@@ -63,8 +87,9 @@ $transactions = $hist->fetchAll();
     <?php if (is_admin()): ?>
     <section class="admin-section" id="section-userguru" style="display:none;">
         <h3 class="section-title">Kelola User & Guru</h3>
+        <a href="create_user.php" class="btn">Buat User Baru</a>
         <?php
-        $users = $pdo->query("SELECT id, username, role FROM user WHERE role IN ('user','guru') ORDER BY role, username")->fetchAll();
+        $users = $pdo->query("SELECT id, username, role FROM user WHERE role IN ('user','guru','admin') ORDER BY role, username")->fetchAll();
         if ($users): ?>
         <table class="user-table">
             <thead><tr><th>ID</th><th>Username</th><th>Role</th><th>Aksi</th></tr></thead>
@@ -74,7 +99,10 @@ $transactions = $hist->fetchAll();
                     <td><?=htmlspecialchars($u['id'])?></td>
                     <td><?=htmlspecialchars($u['username'])?></td>
                     <td><?=htmlspecialchars($u['role'])?></td>
-                    <td><a href="hapus_user.php?id=<?=htmlspecialchars($u['id'])?>" onclick="return confirm('Yakin hapus user/guru ini?')">Hapus</a></td>
+                    <td>
+                        <a href="update_user.php?id=<?=htmlspecialchars($u['id'])?>">Update</a> |
+                        <a href="hapus_user.php?id=<?=htmlspecialchars($u['id'])?>" onclick="return confirm('Yakin hapus user/guru ini?')">Hapus</a>
+                    </td>
                 </tr>
             <?php endforeach; ?>
             </tbody>
@@ -131,23 +159,85 @@ $transactions = $hist->fetchAll();
         <?php endif; ?>
         <?php endif; ?>
     </section>
+    <section class="admin-section" id="section-admindeposit" style="display:none;">
+        <h3 class="section-title">Deposit untuk User/Guru</h3>
+        <form action="transaksi.php" method="post" class="form-card">
+            <input type="hidden" name="csrf" value="<?=htmlspecialchars(csrf_token())?>">
+            <input type="hidden" name="type" value="deposit">
+            <label>Pilih User/Guru
+                <select name="userid" id="deposit-userid" required>
+                    <option value="">-- Pilih --</option>
+                    <?php foreach($allusers as $u): ?>
+                    <option value="<?=htmlspecialchars($u['id'])?>" data-balance="<?php
+                        $stmt_balance = $pdo->prepare("SELECT
+                            IFNULL(SUM(CASE WHEN type='deposit' THEN amount ELSE 0 END),0) AS total_deposit,
+                            IFNULL(SUM(CASE WHEN type='withdraw' THEN amount ELSE 0 END),0) AS total_withdraw
+                            FROM transaksi WHERE userid = ?");
+                        $stmt_balance->execute([$u['id']]);
+                        $totals_balance = $stmt_balance->fetch();
+                        $balance = (float)$totals_balance['total_deposit'] - (float)$totals_balance['total_withdraw'];
+                        echo htmlspecialchars($balance);
+                    ?>"><?=htmlspecialchars($u['role'])?> - <?=htmlspecialchars($u['username'])?></option>
+                    <?php endforeach; ?>
+                </select>
+            </label><br>
+            <div id="deposit-balance-display" style="display:none; margin-bottom:10px; padding:10px; background:#e9ecef; border-radius:6px; color:#333; font-weight:bold;">Saldo saat ini: Rp <span id="deposit-current-balance">0</span></div>
+            <label>Jumlah (contoh: 15000.50)<br><input name="amount" type="number" step="0.01" required></label><br>
+            <label>Catatan (opsional)<br><input name="note"></label><br>
+            <button type="submit">Lakukan Deposit</button>
+        </form>
+        <script>
+        document.getElementById('deposit-userid').addEventListener('change', function() {
+            var selectedOption = this.options[this.selectedIndex];
+            var balance = selectedOption.getAttribute('data-balance');
+            if (balance !== null) {
+                document.getElementById('deposit-current-balance').textContent = parseFloat(balance).toLocaleString('id-ID', {minimumFractionDigits: 2});
+                document.getElementById('deposit-balance-display').style.display = 'block';
+            } else {
+                document.getElementById('deposit-balance-display').style.display = 'none';
+            }
+        });
+        </script>
+    </section>
     <section class="admin-section" id="section-adminwithdraw" style="display:none;">
         <h3 class="section-title">Withdraw untuk User/Guru</h3>
         <form action="transaksi.php" method="post" class="form-card">
             <input type="hidden" name="csrf" value="<?=htmlspecialchars(csrf_token())?>">
             <input type="hidden" name="type" value="withdraw">
             <label>Pilih User/Guru
-                <select name="userid" required>
+                <select name="userid" id="withdraw-userid" required>
                     <option value="">-- Pilih --</option>
                     <?php foreach($allusers as $u): ?>
-                    <option value="<?=htmlspecialchars($u['id'])?>"><?=htmlspecialchars($u['role'])?> - <?=htmlspecialchars($u['username'])?></option>
+                    <option value="<?=htmlspecialchars($u['id'])?>" data-balance="<?php
+                        $stmt_balance = $pdo->prepare("SELECT 
+                            IFNULL(SUM(CASE WHEN type='deposit' THEN amount ELSE 0 END),0) AS total_deposit,
+                            IFNULL(SUM(CASE WHEN type='withdraw' THEN amount ELSE 0 END),0) AS total_withdraw
+                            FROM transaksi WHERE userid = ?");
+                        $stmt_balance->execute([$u['id']]);
+                        $totals_balance = $stmt_balance->fetch();
+                        $balance = (float)$totals_balance['total_deposit'] - (float)$totals_balance['total_withdraw'];
+                        echo htmlspecialchars($balance);
+                    ?>"><?=htmlspecialchars($u['role'])?> - <?=htmlspecialchars($u['username'])?></option>
                     <?php endforeach; ?>
                 </select>
             </label><br>
+            <div id="balance-display" style="display:none; margin-bottom:10px; padding:10px; background:#e9ecef; border-radius:6px; color:#333; font-weight:bold;">Saldo saat ini: Rp <span id="current-balance">0</span></div>
             <label>Jumlah (contoh: 15000)<br><input name="amount" required></label><br>
             <label>Catatan (opsional)<br><input name="note"></label><br>
             <button type="submit">Lakukan Withdraw</button>
         </form>
+        <script>
+        document.getElementById('withdraw-userid').addEventListener('change', function() {
+            var selectedOption = this.options[this.selectedIndex];
+            var balance = selectedOption.getAttribute('data-balance');
+            if (balance !== null) {
+                document.getElementById('current-balance').textContent = parseFloat(balance).toLocaleString('id-ID', {minimumFractionDigits: 2});
+                document.getElementById('balance-display').style.display = 'block';
+            } else {
+                document.getElementById('balance-display').style.display = 'none';
+            }
+        });
+        </script>
     </section>
     <?php elseif (is_guru()): ?>
     <section class="guru-section" id="section-deposit" style="display:none;">
@@ -159,7 +249,17 @@ $transactions = $hist->fetchAll();
         <form action="transaksi.php" method="post" class="form-card">
             <input type="hidden" name="csrf" value="<?=htmlspecialchars(csrf_token())?>">
             <input type="hidden" name="type" value="deposit">
-            <label>Jumlah (contoh: 15000.50)<br><input name="amount" type="number" step="0.01" required></label><br>
+            <label>Pilih User untuk Deposit
+                <select name="userid" required>
+                    <option value="">-- Pilih User --</option>
+                    <?php
+                    $allusers = $pdo->query("SELECT id, username, role FROM user WHERE role IN ('user','guru') ORDER BY role, username")->fetchAll();
+                    foreach($allusers as $u): ?>
+                    <option value="<?=htmlspecialchars($u['id'])?>"><?=htmlspecialchars($u['role'])?> - <?=htmlspecialchars($u['username'])?></option>
+                    <?php endforeach; ?>
+                </select>
+            </label><br>
+            <label>Jumlah (contoh: 15000)<br><input name="amount" type="number" step="0.01" required></label><br>
             <label>Catatan (opsional)<br><input name="note"></label><br>
             <button type="submit">Simpan Deposit</button>
         </form>

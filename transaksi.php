@@ -58,5 +58,20 @@ if ($type === 'withdraw' && $amount > $balance) {
 $ins = $pdo->prepare("INSERT INTO transaksi (userid, amount, type, note) VALUES (?, ?, ?, ?)");
 $ins->execute([$userid, $amount, $type, $note]);
 
-header('Location: dashboard.php');
+// Ambil username user yang ditransaksikan
+$user_stmt = $pdo->prepare("SELECT username FROM user WHERE id = ?");
+$user_stmt->execute([$userid]);
+$user_info = $user_stmt->fetch();
+$username_transacted = $user_info['username'] ?? 'Unknown';
+
+// Hitung saldo baru setelah transaksi
+$stmt_new = $pdo->prepare("SELECT
+    IFNULL(SUM(CASE WHEN type='deposit' THEN amount ELSE 0 END),0) AS total_deposit,
+    IFNULL(SUM(CASE WHEN type='withdraw' THEN amount ELSE 0 END),0) AS total_withdraw
+    FROM transaksi WHERE userid = ?");
+$stmt_new->execute([$userid]);
+$totals_new = $stmt_new->fetch();
+$new_balance = (float)$totals_new['total_deposit'] - (float)$totals_new['total_withdraw'];
+
+header('Location: dashboard.php?success=' . urlencode($type) . '&balance=' . urlencode(number_format($new_balance, 2, ',', '.')) . '&username=' . urlencode($username_transacted));
 exit;
