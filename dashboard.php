@@ -253,9 +253,9 @@ $transactions = $hist->fetchAll();
                 <select name="userid" required>
                     <option value="">-- Pilih User --</option>
                     <?php
-                    $allusers = $pdo->query("SELECT id, username, role FROM user WHERE role IN ('user','guru') ORDER BY role, username")->fetchAll();
+                    $allusers = $pdo->query("SELECT id, username, role FROM user WHERE role = 'user' ORDER BY username")->fetchAll();
                     foreach($allusers as $u): ?>
-                    <option value="<?=htmlspecialchars($u['id'])?>"><?=htmlspecialchars($u['role'])?> - <?=htmlspecialchars($u['username'])?></option>
+                    <option value="<?=htmlspecialchars($u['id'])?>">User - <?=htmlspecialchars($u['username'])?></option>
                     <?php endforeach; ?>
                 </select>
             </label><br>
