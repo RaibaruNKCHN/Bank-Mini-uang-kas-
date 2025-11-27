@@ -1,0 +1,1387 @@
+/* Modern CSS Reset */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* Variables */
+:root {
+    --primary-color: #1a3a5f; /* Deep Navy Blue */
+    --primary-hover: #2d5f8c; /* Lighter Navy */
+    --secondary-color: #6c757d; /* Gray */
+    --success-color: #28a745; /* Green */
+    --danger-color: #dc3545; /* Red */
+    --light-color: #f8f9fa; /* Off White */
+    --dark-color: #0d213b; /* Darker Navy */
+    --background-color: #f0f2f5; /* Light Gray Background */
+    --text-color: #333;
+    --border-color: #dee2e6;
+    --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --border-radius: 8px;
+}
+
+/* Global Styles */
+body {
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    min-height: 100vh;
+}
+
+a {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: var(--primary-hover);
+.filter-form {
+    /* Hide original desktop filter layout — use compact/mobile bar + modal instead */
+    display: none !important;
+}
+    padding: 2rem;
+}
+
+/* Login Page */
+.login-container {
+    width: 100%;
+    max-width: 400px;
+    padding: 2.5rem;
+    background-color: #fff;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    text-align: center;
+}
+
+.login-title {
+    margin-bottom: 1rem;
+    font-size: 2rem;
+    color: var(--dark-color);
+}
+
+.login-subtitle {
+    margin-bottom: 2rem;
+    color: var(--secondary-color);
+}
+
+.login-form .form-group {
+    margin-bottom: 1.5rem;
+    text-align: left;
+}
+
+.form-group-inline {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.form-group-inline label {
+    flex-basis: 100px; /* Adjust as needed */
+    margin-bottom: 0;
+}
+
+.login-form label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.login-form .form-control {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.login-form .form-control:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
+
+/* Slim input style for transaction fields (compact, clean like login inputs but smaller) */
+.input-slim {
+    width: 100%;
+    padding: 0.45rem 0.6rem; /* slimmer vertical padding */
+    border: 1px solid var(--border-color);
+    border-radius: 6px; /* slightly smaller radius */
+    font-size: 0.95rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    background-color: #fff;
+}
+
+.input-slim:focus,
+select.input-slim:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 4px rgba(26, 58, 95, 0.06);
+}
+
+/* Make select elements visually match the slim inputs */
+select.input-slim {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: linear-gradient(45deg, transparent 50%, var(--text-color) 50%), linear-gradient(135deg, var(--text-color) 50%, transparent 50%);
+    background-position: calc(100% - 18px) calc(1.1em + 2px), calc(100% - 13px) calc(1.1em + 2px);
+    background-size: 6px 6px, 6px 6px;
+    background-repeat: no-repeat;
+    padding-right: 2.2rem; /* space for caret */
+}
+
+/* Currency input wrapper */
+.currency-input {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.currency-prefix {
+    position: absolute;
+    left: 10px;
+    color: var(--secondary-color);
+    font-weight: 600;
+    pointer-events: none;
+}
+
+.currency-input .currency-display {
+    padding-left: 2.2rem; /* space for prefix */
+}
+
+/* Stepper controls to the right of currency input */
+.currency-controls {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.btn-step {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 26px;
+    padding: 0;
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    background: #fff;
+    color: var(--text-color);
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.currency-input .currency-display {
+    padding-right: 48px; /* reserve space for controls */
+}
+
+.btn {
+    display: inline-block;
+    padding: 0.6rem 1.2rem; /* Reduced base padding */
+    border: none;
+    border-radius: var(--border-radius);
+    background-color: var(--primary-color);
+    color: #fff;
+    font-size: 0.95rem; /* Slightly smaller font */
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-2px);
+}
+
+.btn-danger {
+    background-color: var(--danger-color);
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+}
+
+.btn-sm {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.8rem;
+}
+
+.btn-block {
+    width: 100%;
+}
+
+.login-footer {
+    margin-top: 1.5rem;
+}
+
+.alert {
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border: 1px solid transparent;
+    border-radius: var(--border-radius);
+}
+
+.alert-danger {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+
+/* Auth Page Layout */
+.auth-container {
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.auth-branding {
+    flex-basis: 50%;
+    background-color: var(--light-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+}
+
+.auth-logo {
+    max-width: 250px;
+    height: auto;
+    transition: max-width 0.3s ease;
+}
+
+.auth-form-container {
+    flex-basis: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fff;
+    padding: 2rem; /* Add padding for smaller screens */
+}
+
+.login-container {
+    box-shadow: none; /* Shadow is no longer needed in this layout */
+}
+
+/* Dashboard */
+.dashboard-container {
+    width: 100%;
+    max-width: 1100px;
+    background-color: #fff;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    padding: 1.5rem 2rem; /* slightly tighter padding */
+    margin: 0 auto; /* ensure it's flush to top/bottom flow */
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    display: flex;
+    align-items: center;
+}
+
+.navbar-logo {
+    height: 35px; /* Adjust size */
+    margin-right: 10px;
+}
+
+.navbar-nav {
+    display: flex;
+    align-items: center; /* Align items vertically */
+    gap: 0.75rem; /* Consistent gap */
+}
+
+/* Ensure navbar buttons have same size */
+.navbar-nav .btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    min-height: 38px;
+    display: inline-flex;
+    align-items: center;
+}
+
+.user-info {
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    background-color: var(--light-color);
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-color);
+}
+
+.welcome-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background-color: var(--light-color);
+    border-radius: var(--border-radius);
+}
+
+.welcome-header h2 {
+    margin-bottom: 0.5rem;
+    color: var(--dark-color);
+}
+
+/* Centered layout for user saldo card */
+.card.saldo-card {
+    text-align: center;
+}
+.card.saldo-card .card-title {
+    text-align: center;
+}
+.card.saldo-card .saldo-value {
+    margin: 0.5rem auto 0;
+    text-align: center;
+}
+
+.card {
+    background-color: #fff;
+    border-radius: var(--border-radius);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* Softer shadow */
+    padding: 1.5rem;
+    margin-bottom: 1.5rem; /* Reduced margin */
+}
+
+.card-title {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.saldo-value {
+    font-size: 2.5rem; /* Slightly smaller */
+    font-weight: 700;
+    color: var(--success-color);
+}
+
+.table-responsive-wrapper {
+    overflow-x: auto;
+    width: 100%;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    font-size: 0.9rem;
+    padding: 0.8rem 1rem; /* Adjusted padding */
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+    white-space: nowrap; /* Prevent text wrapping in cells */
+}
+
+th.action-buttons, td.action-buttons {
+    white-space: nowrap;
+    width: 1%; /* Prevent buttons from wrapping */
+}
+
+.action-buttons button {
+    margin-bottom: 5px; /* Add space between buttons if they wrap */
+}
+
+/* Compact action buttons used in tables */
+.action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.22rem 0.5rem;
+    border-radius: 6px;
+    font-size: 0.80rem;
+    font-weight: 600;
+    min-height: 30px;
+    line-height: 1;
+}
+.action-btn .action-icon {
+    width: 14px;
+    height: 14px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+/* Loading spinner for action buttons */
+.action-btn.loading .action-icon {
+    animation: spin 0.9s linear infinite;
+}
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+.action-btn .action-text { display: inline-block; }
+
+/* Size variants */
+.action-btn.small { padding: 0.16rem 0.4rem; font-size: 0.76rem; min-height: 26px; }
+.action-btn.info { background: #1a73e8; color: #fff; border: none; }
+.action-btn.update { background: #0b5cff; color: #fff; border: none; }
+.action-btn.danger { background: var(--danger-color); color: #fff; border: none; }
+
+/* Mobile: show icon-only buttons to save space */
+@media (max-width: 768px) {
+    .action-btn { padding: 5px; gap: 0; width: 34px; height: 34px; justify-content: center; }
+    .action-btn .action-text { display: none; }
+    .action-btn .action-icon { width: 16px; height: 16px; }
+}
+
+/* Make table action buttons icon-only (desktop and mobile) */
+.table-responsive-wrapper .action-buttons .action-btn {
+    padding: 6px; gap: 0; width: 36px; height: 36px; justify-content: center; align-items: center;
+}
+.table-responsive-wrapper .action-buttons .action-btn .action-text { display: none !important; }
+.table-responsive-wrapper .action-buttons .action-btn .action-icon { width: 16px; height: 16px; }
+.table-responsive-wrapper .action-buttons .action-btn[title] { cursor: pointer; }
+
+/* Slightly larger buttons on hover to aid clickability */
+.table-responsive-wrapper .action-buttons .action-btn:hover { transform: translateY(-2px); }
+
+th {
+    background-color: var(--light-color);
+    font-weight: 600;
+}
+
+tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Use modal panels instead of dropdowns for menu/settings actions */
+
+/* Responsive */
+@media (max-width: 1080px) {
+    .dashboard-container {
+        padding: 1.5rem;
+    }
+
+    .auth-logo {
+        max-width: 200px; /* Slightly smaller logo on medium screens */
+    }
+}
+
+@media (max-width: 768px) {
+    body {
+        font-size: 14px; /* Reduce base font size */
+    }
+
+    .dropdown-menu {
+        min-width: 180px; /* Adjust width for mobile */
+    }
+
+    .container, .dashboard-container {
+        padding: 1rem;
+    }
+
+    .auth-container {
+        flex-direction: column;
+        height: auto;
+        min-height: 100vh;
+    }
+
+    .auth-branding {
+        flex-basis: auto;
+        padding: 2rem 1rem; /* Adjust padding */
+        min-height: 200px; /* Give it some space */
+    }
+
+    .auth-logo {
+        max-width: 150px; /* Smaller logo for mobile */
+    }
+
+    .auth-form-container {
+        flex-basis: auto;
+    }
+
+    .login-container {
+        padding: 2rem 1rem;
+    }
+
+    .navbar {
+        flex-direction: row; /* Keep horizontal on mobile */
+        justify-content: space-between;
+    }
+
+    .navbar-brand {
+        font-size: 1.1rem;
+    }
+    
+    .navbar-nav {
+        gap: 0.5rem;
+    }
+
+    .btn {
+        padding: 0.5rem 0.7rem;
+        font-size: 0.8rem;
+    }
+    
+    .navbar-nav .btn, .dropdown-toggle {
+        padding: 0.5rem 0.7rem;
+        font-size: 0.8rem;
+    }
+
+    .form-group-inline {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.5rem;
+    }
+    
+    .form-group-inline label {
+        flex-basis: auto;
+    }
+
+    th, td {
+        font-size: 0.85rem;
+        padding: 0.6rem;
+    }
+
+    .saldo-value {
+        font-size: 2rem;
+    }
+
+    .card-title {
+        font-size: 1.1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .navbar-brand span {
+        display: none; /* Hide "Mini Bank" text on very small screens */
+    }
+
+    .navbar-logo {
+        margin-right: 0;
+    }
+}
+
+.filter-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding: 0.8rem 0.6rem; /* reduce padding so it sits closer to surrounding content */
+    background-color: transparent; /* remove box container look */
+    border-radius: var(--border-radius);
+    margin-bottom: 0.75rem; /* less vertical gap */
+    border: none; /* remove grey border line above filter */
+}
+.filter-form .form-group {
+    flex: 1 1 180px;
+    margin-bottom: 0;
+}
+.filter-form .btn {
+    align-self: flex-end;
+    height: 40px; /* Match form control height */
+}
+
+/* View Switcher Toggle */
+.view-switcher {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+.view-switcher .switch {
+    margin-bottom: 0;
+}
+.view-switcher label {
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+/* Make dropdowns and admin settings compact on very small screens */
+@media (max-width: 480px) {
+    /* Reduce modal padding and width on very small screens */
+    .modal-content {
+        padding: 1rem !important;
+        max-width: 360px !important;
+    }
+
+    .modal-title { font-size: 1rem; }
+    .modal-body p { font-size: 0.92rem; }
+}
+
+/* Mobile-specific modal presentation handled by .modal-content.modal-menu rules above */
+
+/* Modal Styles */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    /* Remove darkening overlay while keeping the modal container for click-to-close behavior */
+    background-color: transparent;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: auto;
+    padding: 2.5rem;
+    border: 1px solid #888;
+    width: 90%;
+    max-width: 500px;
+    border-radius: var(--border-radius);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    position: relative;
+    animation: slide-down 0.28s cubic-bezier(.2,.9,.2,1);
+}
+
+/* Modal menu - compact panels used for navbar actions */
+.modal-content.modal-menu {
+    max-width: 420px;
+    width: 340px;
+    padding: 1rem 1rem 0.75rem 1rem;
+}
+.modal-panel { padding: 0.5rem 0; }
+.panel-header .btn { padding: 0.35rem 0.6rem; }
+
+/* On small screens make modal-menu full width */
+@media (max-width: 480px) {
+    .modal-content.modal-menu {
+        width: calc(100vw - 24px) !important;
+        max-width: calc(100vw - 24px) !important;
+        margin: 8px;
+        border-radius: 8px;
+        padding: 0.75rem;
+    }
+    .modal-content.modal-menu .modal-body { padding: 0.5rem 0; }
+}
+
+@keyframes slide-down {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.modal-close {
+    color: #aaa;
+    position: absolute;
+    top: 1rem;
+    right: 1.5rem;
+    font-size: 2rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* Slim icon button used for back/compact controls */
+.btn-icon {
+    background: transparent;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-color);
+    cursor: pointer;
+}
+.btn-slim {
+    width: 34px;
+    height: 34px;
+    padding: 4px;
+    border-radius: 6px;
+}
+
+/* Toggle switch */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 44px;
+    height: 24px;
+}
+.switch input { display: none; }
+.switch .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.2s;
+    border-radius: 16px;
+}
+.switch .slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    top: 3px;
+    background-color: white;
+    transition: 0.2s;
+    border-radius: 50%;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+}
+.switch input:checked + .slider {
+    background-color: var(--primary-color);
+}
+.switch input:checked + .slider:before {
+    transform: translateX(20px);
+}
+
+/* Session time row: align label and value, match font-size to nearby labels */
+.session-time-row { width: 100%; }
+.session-time-row .session-time-label,
+.session-time-row .session-time-value {
+    font-size: 0.95rem; /* match compact label size used across the modal */
+    color: var(--text-color);
+}
+.session-time-row .session-time-label { font-weight: 600; }
+.session-time-row .session-time-value { font-weight: 600; }
+
+/* Ensure the value aligns to the right and wraps nicely on small screens */
+.session-time-value { text-align: right; min-width: 48px; }
+
+/* Specific inline display for the minutes display so it lines up with toggle */
+#timeoutMinutesDisplay {
+    display: inline-block;
+    font-size: 0.95rem; /* match nearby label size */
+    font-weight: 600;
+    margin-left: 6px; /* small gap from label/toggle */
+    vertical-align: middle;
+    color: var(--text-color);
+}
+
+/* Make sure the switch control vertically centers with text values */
+.session-time-row .switch,
+.session-time-row .switch * {
+    vertical-align: middle;
+}
+
+/* Button placed next to session time value */
+.session-time-change { margin-left: 6px; padding: 0.32rem 0.6rem; }
+.session-time-change { display: inline-flex; align-items: center; justify-content: center; }
+
+@media (max-width: 480px) {
+    .session-time-row .session-time-label,
+    .session-time-row .session-time-value { font-size: 0.92rem; }
+}
+
+/* Present smaller close icon for modal headers (especially menu modal) */
+.modal-content .modal-close {
+    background: transparent;
+    border: none;
+    color: #666;
+    top: 10px;
+    right: 10px;
+    font-size: 1rem;
+    padding: 6px;
+}
+.modal-content .modal-close i { font-size: 1rem; }
+
+.modal-close:hover,
+.modal-close:focus {
+    color: #000;
+}
+
+/* Modal internals for a cleaner look */
+.modal-title { margin-top: 0; margin-bottom: 0.5rem; }
+.modal-body { padding-top: 0.25rem; }
+.modal-body p { color: var(--secondary-color); margin-bottom: 1rem; }
+.modal-footer { display: flex; justify-content: flex-end; gap: 8px; margin-top: 1rem; }
+
+/* Update modal actions: two equal-width buttons inline */
+.modal-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 12px;
+}
+.modal-actions .btn {
+    flex: 1 1 0;
+    min-width: 0;
+}
+@media (max-width: 420px) {
+    .modal-actions { gap: 8px; }
+    .modal-actions .btn { font-size: 0.92rem; padding: 0.46rem 0.6rem; }
+}
+
+/* Confirm modal tweaks */
+#confirmModal .modal-content { max-width: 420px; }
+#confirmModal .modal-body { padding: 0.75rem 0.85rem; }
+#confirmModal .confirm-message { margin: 0.25rem 0; color: var(--text-color); }
+#confirmModal .modal-actions { justify-content: flex-end; }
+#confirmModal .btn-secondary { background: #f1f3f5; color: #222; border: 1px solid var(--border-color); }
+
+/* Dedicated styling to match 'Infram' visual: blue header, white card, pill buttons */
+#confirmModal {
+    /* gentle overlay behind the modal card */
+    background-color: rgba(13,33,59,0.06);
+}
+#confirmModal .modal-content {
+    max-width: 460px;
+    width: min(92%, 460px);
+    padding: 0;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 18px 40px rgba(13,33,59,0.12);
+    border: none;
+}
+#confirmModal .modal-header {
+    background: linear-gradient(180deg,#1a4a78,#2a6ea3);
+    padding: 16px 18px;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+#confirmModal .modal-title { font-size: 1.05rem; font-weight: 700; }
+#confirmModal .modal-close { color: rgba(255,255,255,0.95); font-size: 1.25rem; top: 10px; right: 12px; }
+#confirmModal .modal-body {
+    background: #fff;
+    padding: 18px 20px;
+    color: #333;
+}
+#confirmModal .confirm-message { font-size: 0.98rem; line-height: 1.45; color: #444; }
+#confirmModal .modal-actions {
+    padding: 14px 18px;
+    background: #fff;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+#confirmModal .btn-secondary {
+    background: #f6f7f9;
+    color: #222;
+    border: 1px solid #e6e9ed;
+    box-shadow: 0 6px 18px rgba(13,33,59,0.06);
+    border-radius: 10px;
+    padding: 8px 14px;
+    font-weight: 700;
+}
+#confirmModal .btn-secondary:hover { transform: translateY(-1px); }
+#confirmModal .btn-danger {
+    background: linear-gradient(180deg,#e14b52,#cc3a3f);
+    color: #fff;
+    border: none;
+    box-shadow: 0 8px 26px rgba(201,56,60,0.18);
+    border-radius: 10px;
+    padding: 8px 16px;
+    font-weight: 800;
+}
+#confirmModal .btn-danger:hover { transform: translateY(-1px); }
+
+@media (max-width: 420px) {
+    #confirmModal .modal-content { width: calc(100% - 32px); margin: 8px; }
+    #confirmModal .modal-actions { gap: 8px; }
+    #confirmModal .btn-secondary, #confirmModal .btn-danger { padding: 8px 12px; font-size: 0.95rem; }
+}
+
+/* Slight scale animation for modal entrance */
+@keyframes scale-in {
+    from { transform: translateY(-8px) scale(0.98); opacity: 0; }
+    to { transform: translateY(0) scale(1); opacity: 1; }
+}
+.modal.show .modal-content { animation: scale-in 220ms cubic-bezier(.2,.9,.2,1); }
+
+/* Toast notification */
+.app-toast {
+    position: fixed;
+    right: 20px;
+    bottom: 24px;
+    background: rgba(26,58,95,0.95);
+    color: #fff;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+    z-index: 2000;
+    font-weight: 600;
+    min-width: 220px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.app-toast.show {
+    display: flex;
+    animation: toast-in 0.25s ease-out;
+}
+
+@keyframes toast-in {
+    from { transform: translateY(12px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* Screen-reader only helper */
+.sr-only {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+}
+
+/* Refinements: Select2, filter controls, and modal header to match theme */
+/* Select2 integration tweaks */
+.select2-container--default .select2-selection--single {
+    height: 40px;
+    padding: 6px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background-color: #fff;
+    transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: var(--text-color);
+    line-height: 26px;
+}
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 36px;
+}
+.select2-container--default.select2-container--open .select2-selection--single,
+.select2-container--default .select2-selection--single:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 6px 18px rgba(26,58,95,0.06);
+}
+
+/* Filter form visual polish */
+.filter-form {
+    /* compact, transparent filter wrapper (visual emphasis moved to controls) */
+    background-color: transparent;
+    border: none;
+    padding: 0.6rem 0.6rem;
+    gap: 0.75rem;
+    align-items: end;
+}
+.filter-form .form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    color: var(--dark-color);
+}
+.filter-form .form-control, .filter-form .input-slim, .filter-form .select2-selection--single {
+    height: 40px;
+}
+
+/* Placeholder styling */
+input::placeholder, .input-slim::placeholder {
+    color: rgba(51,51,51,0.45);
+}
+
+/* Account search input specific tweaks to visually pop in filter area */
+.account-search { min-height: 40px; }
+
+/* Action buttons in filter row slightly raised */
+.filter-form .btn {
+    align-self: flex-end;
+    box-shadow: 0 6px 14px rgba(26,58,95,0.06);
+}
+
+/* Modal header theme */
+.modal-content .modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--border-color);
+    background: linear-gradient(90deg, var(--primary-color), var(--primary-hover));
+    color: #fff;
+    border-top-left-radius: calc(var(--border-radius) - 2px);
+    border-top-right-radius: calc(var(--border-radius) - 2px);
+}
+.modal-content .modal-header .modal-title { color: #fff; margin: 0; font-weight: 700; }
+.modal-content .modal-close { color: rgba(255,255,255,0.9); }
+
+/* Subtle hover for table rows to match theme */
+tbody tr:hover { background-color: rgba(45,95,140,0.04); }
+
+/* Slightly stronger emphasis for primary buttons */
+.btn {
+    box-shadow: 0 8px 22px rgba(26,58,95,0.06);
+}
+
+/* Reduced visual noise for small panels */
+.modal-content.modal-menu { box-shadow: 0 8px 30px rgba(13,33,59,0.08); }
+
+/* Enhanced Filter & History Styling */
+.filter-field {
+    display: flex;
+    flex-direction: column;
+}
+.filter-label {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--dark-color);
+    margin-bottom: 6px;
+}
+.filter-input, .filter-select, .date-filter input, .date-filter select {
+    height: 44px;
+    padding: 0.6rem 0.9rem;
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+    background: linear-gradient(180deg,#fff,#fbfdff);
+    box-shadow: 0 6px 18px rgba(13,33,59,0.03);
+    transition: box-shadow 0.16s ease, border-color 0.16s ease, transform 0.06s ease;
+}
+.filter-input:focus, .filter-select:focus, .date-filter input:focus, .date-filter select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 10px 30px rgba(26,58,95,0.06);
+    transform: translateY(-1px);
+}
+.filter-row {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-end;
+    flex-wrap: wrap;
+}
+
+/* Transaction history specific */
+.history-filter { padding: 0.85rem; background: #fff; border-radius: 12px; border: 1px solid var(--border-color); }
+.history-filter .form-group { min-width: 160px; }
+.history-filter .filter-day, .history-filter .filter-account { width: 220px; }
+.history-filter .filter-date-range { display:flex; gap:0.5rem; align-items:center; }
+.history-filter .filter-date-range input[type="date"] { width: 160px; }
+
+/* Make Select2 in filter area match our rounded style */
+.filter-form .select2-container--default .select2-selection--single,
+.history-filter .select2-container--default .select2-selection--single {
+    border-radius: 10px;
+    height: 44px;
+    padding: 6px 12px;
+    box-shadow: 0 6px 18px rgba(13,33,59,0.03);
+}
+
+/* Prominent admin-access error messaging for the switch area */
+.admin-access-error {
+    color: var(--danger-color);
+    background: rgba(220,53,69,0.06);
+    border: 1px solid rgba(220,53,69,0.12);
+    padding: 0.45rem 0.6rem;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+/* Small screens tweaks for filters */
+@media (max-width: 768px) {
+    /* Keep filters horizontal on smaller screens by allowing horizontal scroll
+       and shrinking controls. This preserves the same visual order as desktop. */
+    .filter-row { flex-direction: row; align-items: center; flex-wrap: nowrap; }
+    .filter-form { overflow-x: auto; gap: 0.6rem; padding: 0.6rem; }
+    .history-filter .filter-account, .history-filter .filter-day { width: auto; }
+    .filter-form .form-group { flex: 0 0 120px; min-width: 100px; }
+    .filter-form .form-group.search-group { flex: 0 0 180px; min-width: 140px; }
+    .filter-form .btn { flex: 0 0 110px; }
+}
+
+/* Additional modern filter & switch polish */
+.filter-form {
+    padding: 1rem 1.1rem;
+    gap: 0.9rem;
+    align-items: center;
+}
+.filter-form .form-group { flex: 1 1 200px; min-width: 140px; }
+.filter-form .form-control {
+    height: 44px;
+    padding: 0.55rem 0.9rem;
+    border-radius: 999px; /* pill style for modern look */
+    border: none; /* remove classic box border */
+    background: linear-gradient(180deg,#f6f9fc,#f3f7fb); /* soft, elevated background */
+    box-shadow: 0 6px 18px rgba(13,33,59,0.03);
+    transition: box-shadow .16s ease, transform .06s ease;
+}
+.filter-form .form-control:focus {
+    outline: none;
+    box-shadow: 0 12px 30px rgba(26,58,95,0.07);
+    transform: translateY(-1px);
+}
+.filter-form input[type="date"],
+.filter-form input[type="text"],
+.filter-form input[type="search"] {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+.filter-form select { appearance: none; }
+
+/* Make the admin switch float to the right of the header area */
+.card > div[style*="display: flex"] .view-switcher {
+    margin-left: auto;
+}
+
+/* Highlight the search control to be more prominent */
+.filter-form .form-group.search-group { flex: 2 1 320px; }
+.filter-form .form-group.search-group .form-control { padding-left: 1rem; }
+
+/* Make filter action button visually lighter and aligned */
+.filter-form .btn { height: 44px; padding: 0 1rem; border-radius: 10px; }
+
+/* Select2: ensure the internal search input looks integrated */
+.select2-container--default .select2-search--inline .select2-search__field {
+    padding: 8px 6px;
+    height: 28px;
+}
+
+/* Small tweak for very small screens */
+@media (max-width: 480px) {
+    /* Very small screens: keep horizontal, slightly smaller controls */
+    .filter-form { padding: 0.5rem; gap: 0.5rem; }
+    .filter-form .form-group { flex: 0 0 100px; min-width: 92px; }
+    .filter-form .form-group.search-group { flex: 0 0 140px; min-width: 120px; }
+    .filter-form .btn { flex: 0 0 100px; min-width: 90px; }
+    /* Allow the action button to wrap under extreme constraints but prefer horizontal */
+    .filter-form .btn.wrap-when-needed { width: auto; }
+}
+
+/* Convert non-search filter controls into compact square icon-buttons on small screens
+   while keeping the overall filter row horizontal. Uses :has() to detect child input types. */
+@media (max-width: 768px) {
+    .filter-form .form-group:not(:has(input[name="search"])),
+    .filter-form .form-group.compact {
+        flex: 0 0 44px;
+        min-width: 44px;
+        height: 44px;
+        padding: 0;
+        border-radius: 10px;
+        background: linear-gradient(180deg,#fff,#fbfdff);
+        box-shadow: 0 6px 18px rgba(13,33,59,0.03);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        margin-right: 6px;
+    }
+    /* keep native control interactive but visually hidden (covers the square) */
+    .filter-form .form-group:not(:has(input[name="search"])) .form-control,
+    .filter-form .form-group.compact .form-control {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        border: none;
+        background: transparent;
+        z-index: 2;
+        cursor: pointer;
+    }
+    /* Add icon markers on the parent .form-group using :after */
+    /* Use small SVG icons instead of emoji for consistent rendering */
+    .filter-form .form-group::after {
+        content: '';
+        display: inline-block;
+        width: 18px;
+        height: 18px;
+        background-repeat: no-repeat;
+        background-size: contain;
+        opacity: 0.95;
+    }
+    .filter-form .form-group:has(input[type="date"]):not(:has(input[name="search"]))::after,
+    .filter-form .form-group.compact.date::after {
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='%23333' d='M7 10h5v5H7z'/><path fill='%23333' d='M19 4h-1V2h-2v2H8V2H6v2H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zM5 20V9h14v11H5z'/></svg>");
+    }
+    .filter-form .form-group:has(select[name="filter_role"]):not(:has(input[name="search"]))::after,
+    .filter-form .form-group.compact.role::after {
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='%23333' d='M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zM8 11c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5C15 14.17 10.33 13 8 13zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5C23 14.17 18.33 13 16 13z'/></svg>");
+    }
+    .filter-form .form-group:not(:has(input[type="date"])):not(:has(select[name="filter_role"])):not(:has(input[name="search"]))::after,
+    .filter-form .form-group.compact.default::after {
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='%23333' d='M7 10l5 5 5-5z'/></svg>");
+    }
+    .filter-form .form-group::after {
+        font-size: 18px;
+        line-height: 1;
+        pointer-events: none;
+    }
+    /* Make the filter action button slightly larger and keep it inline */
+    .filter-form .btn { height: 44px; border-radius: 10px; }
+}
+
+/* On very small screens allow scroll but prefer inline controls */
+@media (max-width: 420px) {
+    .filter-form { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+}
+
+/* On very small screens (<=360px) make Filter button full-width on its own row */
+@media (max-width: 360px) {
+    .filter-form { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .filter-form .btn { order: 99; width: 100%; min-width: 0; }
+    .filter-form .form-group { flex: 0 0 auto; }
+}
+
+/* Table skeleton / shimmer loading effect */
+.table-skeleton-row td {
+    background: transparent;
+    border-bottom: 1px solid var(--border-color);
+}
+.skeleton-line {
+    display: inline-block;
+    width: 100%;
+    height: 14px;
+    border-radius: 6px;
+    background: linear-gradient(90deg, #eef1f6 25%, #f7f9fc 50%, #eef1f6 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.1s linear infinite;
+}
+
+@keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* Make skeleton cells slightly muted on hover disabled state */
+.table-skeleton-row { opacity: 0.98; }
+
+/* Detail modal - transactions grid */
+.detail-transactions-grid {
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    /* increase horizontal gap between date column and description for readability */
+    gap: 8px 20px;
+    align-items: start;
+}
+.detail-transactions-grid .dt-item {
+    display: contents; /* allow grid children to flow on desktop */
+}
+.dt-date {
+    font-size: 0.78rem;
+    color: var(--secondary-color);
+    padding-top: 2px;
+}
+.dt-desc {
+    font-size: 0.86rem;
+    color: var(--text-color);
+}
+.dt-actor { color: var(--secondary-color); font-weight:600; margin-left:6px; }
+
+@media (max-width: 480px) {
+    /* On narrow screens render each transaction as a single inline row
+       with description on the left and date on the right. */
+    /* more horizontal breathing room on mobile */
+    .detail-transactions-grid { grid-template-columns: 1fr; gap: 6px 28px; }
+    .detail-transactions-grid .dt-item { display: flex; align-items: center; justify-content: space-between; padding: 6px 0; }
+    .detail-transactions-grid .dt-desc { flex: 1 1 auto; margin-right: 24px; font-size: 0.88rem; }
+    .detail-transactions-grid .dt-date { flex: 0 0 auto; white-space: nowrap; font-size: 0.8rem; color: var(--secondary-color); }
+}
+
+/* Reduce typography in the user detail modal so content fits better */
+#userDetailContent {
+    font-size: 0.92rem; /* overall slightly smaller */
+}
+#userDetailContent h3 {
+    font-size: 1.0rem; /* smaller saldo header */
+    margin: 0.35rem 0;
+}
+#userDetailContent p { font-size: 0.9rem; margin: 0.18rem 0; }
+
+
+/* Mobile filter bar (search + search button + filter) */
+.filter-mobile-bar {
+    display: flex; /* show mobile bar on desktop too to unify UX */
+    gap: 0.5rem;
+    align-items: center;
+    margin-bottom: 0.5rem; /* reduce vertical gap */
+}
+.filter-mobile-bar .form-control { flex: 1 1 auto; }
+.filter-mobile-bar .btn { flex: 0 0 auto; }
+
+/* Modern pill-style mobile search input */
+.filter-mobile-bar .form-control {
+    border: none;
+    border-radius: 999px;
+    padding: 0.55rem 0.9rem;
+    background: #f4f7fb;
+    box-shadow: 0 6px 14px rgba(13,33,59,0.03);
+}
+.filter-mobile-bar .btn {
+    border-radius: 8px;
+    padding: 0.45rem 0.8rem;
+}
+
+/* Modal filter form styles (used across pages) */
+.modal-filter-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    align-items: center;
+}
+.modal-filter-form .form-group {
+    margin-bottom: 0;
+}
+.modal-filter-form .form-group label {
+    display: block;
+    margin-bottom: 0.35rem;
+    font-weight: 600;
+    color: var(--dark-color);
+}
+.modal-filter-form .form-control {
+    height: 44px;
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background: #fff;
+    box-shadow: 0 6px 18px rgba(13,33,59,0.03);
+}
+
+@media (max-width: 768px) {
+    .modal-filter-form { grid-template-columns: 1fr; /* stack on mobile */ }
+    .filter-form .desktop-only { display: none; }
+    .filter-mobile-bar { display: flex; }
+}
+
+/* Visual tooltip styling for buttons with title attribute or .has-tooltip */
+.has-tooltip { position: relative; }
+.has-tooltip[data-tooltip]:hover::after,
+.has-tooltip[data-tooltip]:focus::after {
+    opacity: 1;
+    transform: translateY(0);
+}
+.has-tooltip::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 120%;
+    left: 50%;
+    transform: translateX(-50%) translateY(6px);
+    background: rgba(0,0,0,0.85);
+    color: #fff;
+    padding: 6px 8px;
+    border-radius: 6px;
+    font-size: 13px;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 120ms ease, transform 120ms ease;
+    z-index: 2100;
+}
+.has-tooltip::before {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: rgba(0,0,0,0.85);
+    opacity: 0;
+    transition: opacity 120ms ease;
+}
+.has-tooltip[data-tooltip]:hover::before,
+.has-tooltip[data-tooltip]:focus::before { opacity: 1; }

@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# Simple pre-commit hook: run PHP lint on all staged PHP files
+FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E "\.php$" || true)
+if [ -z "$FILES" ]; then
+  exit 0
+fi
+FAIL=0
+for f in $FILES; do
+  php -l "$f" >/dev/null 2>&1
+  if [ $? -ne 0 ]; then
+    echo "PHP syntax error in $f"
+    php -l "$f"
+    FAIL=1
+  fi
+done
+if [ "$FAIL" -ne 0 ]; then
+  echo "Commit aborted due to PHP syntax errors. Fix them first." >&2
+  exit 1
+fi
+exit 0

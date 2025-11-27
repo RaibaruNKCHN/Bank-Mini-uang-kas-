@@ -1,0 +1,29 @@
+# Node / build / IDE
+node_modules/
+.vscode/
+
+# PHP runtime / logs
+logs/
+*.log
+
+# Archives and unused/residu files
+archive/
+archives/
+residu/
+unused/
+
+# Composer
+vendor/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# htaccess (do not commit sensitive server configs)
+.htaccess
+
+# PHPStorm / JetBrains
+.idea/
+# Ignore archived unused files
+archive_unused/
+.htaccess*
