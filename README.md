@@ -103,12 +103,11 @@ bank_mini/
 ├─ database/
 │  └─ bmsmk.sql
 ├─ .githooks/
-│  └─ pre-commit
-├─ .gitignore
-├─ README.md
-└─ .htaccess.disabled
+│  └─ pre-commit 
+└─ README.md
 ```
  
 
 © edited by LTZ24
+
 
